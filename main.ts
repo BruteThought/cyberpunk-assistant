@@ -1,4 +1,5 @@
 import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import {CyberpunkView, VIEW_TYPE_CYBERPUNK} from "./view";
 
 // Remember to rename these classes and interfaces!
 
@@ -16,14 +17,15 @@ export default class cyberpunkAssistant extends Plugin {
 	async onload() {
 		await this.loadSettings();
 
-		// This creates an icon in the left ribbon.
-		const ribbonIconEl = this.addRibbonIcon('circuit-board', 'Cyberpunk Assistant', (evt: MouseEvent) => {
-			// Called when the user clicks the icon.
-			new Notice('This is a notice!');
-		});
-		// Perform additional things with the ribbon
-		ribbonIconEl.addClass('cyberpunk-assistant-ribbon-class');
+		// Register the view
+		this.registerView(
+			VIEW_TYPE_CYBERPUNK,
+			(leaf) => new CyberpunkView(leaf)
+		);
 
+		this.addRibbonIcon("circuit-board", "Cyberpunk assistant", () => {
+			this.activateView();
+		});
 
 		// This adds a simple command that can be triggered anywhere
 		this.addCommand({
@@ -68,7 +70,21 @@ export default class cyberpunkAssistant extends Plugin {
 	}
 
 	onunload() {
+		this.app.workspace.detachLeavesOfType(VIEW_TYPE_CYBERPUNK);
+		//todo: is there anything else I need to do for cleanup?
+	}
 
+	async activateView() {
+		this.app.workspace.detachLeavesOfType(VIEW_TYPE_CYBERPUNK);
+
+		await this.app.workspace.getRightLeaf(false).setViewState({
+			type: VIEW_TYPE_CYBERPUNK,
+			active: true,
+		});
+
+		this.app.workspace.revealLeaf(
+			this.app.workspace.getLeavesOfType(VIEW_TYPE_CYBERPUNK)[0]
+		);
 	}
 
 	async loadSettings() {
