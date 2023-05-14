@@ -1,4 +1,4 @@
-import {ItemView, TextComponent, WorkspaceLeaf} from "obsidian";
+import {ItemView, Notice, TextComponent, WorkspaceLeaf} from "obsidian";
 import {testFunc} from "./networkGenerator";
 
 export const VIEW_TYPE_CYBERPUNK = "cyberpunk-assistant-view";
@@ -52,13 +52,13 @@ export class CyberpunkView extends ItemView {
 			// Difficulty
 		networkConfigEl.createDiv({cls:"cpunk-option-header", text:"Difficulty"});
 		const difficultyDiv = networkConfigEl.createDiv("cpunk-network-difficulty");
-		const diffEasy = difficultyDiv.createEl("input", {type: "radio", attr: {"id":"cpunk-easy", "name":"floor_diff"}})
+		const diffEasy = difficultyDiv.createEl("input", {type: "radio", attr: {"id":"cpunk-easy", "name":"floor_diff", "value":"0"}})
 		difficultyDiv.createEl("label", {text: "Easy", attr:{"for":"cpunk-easy"}, })
 		difficultyDiv.createEl("br");
-		const diffMedium = difficultyDiv.createEl("input", {type: "radio", attr: {"id":"cpunk-medium", "name":"floor_diff", "checked":"true"}})
+		const diffMedium = difficultyDiv.createEl("input", {type: "radio", attr: {"id":"cpunk-medium", "name":"floor_diff", "value":"1", "checked":"true"}})
 		difficultyDiv.createEl("label", {text: "Medium", attr:{"for":"cpunk-medium"}, })
 		difficultyDiv.createEl("br");
-		const diffHard = difficultyDiv.createEl("input", {type: "radio", attr: {"id":"cpunk-hard", "name":"floor_diff"}})
+		const diffHard = difficultyDiv.createEl("input", {type: "radio", attr: {"id":"cpunk-hard", "name":"floor_diff", "value":"2"}})
 		difficultyDiv.createEl("label", {text: "Hard", attr:{"for":"cpunk-hard"}, })
 
 			// Boss Floors
@@ -72,7 +72,36 @@ export class CyberpunkView extends ItemView {
 		const netGenEl = networkConfigEl.createDiv("cpunk-network-button");
 		const networkButton = netGenEl.createEl("button", {text: "Generate Network"})
 		networkButton.onClickEvent(function() {
-			testFunc(floorComponent.getValue());
+			let floorNo;
+			let difficulty = diffEasy.checked ? diffEasy.value : diffMedium.checked ? diffMedium.value : diffHard.value;
+			let bossFloors;
+
+			if(floorComponent.disabled) {
+				floorNo = 0;
+			} else {
+				// Check user input for floor number.
+				let floorsUserInput = floorComponent.getValue()
+				if(Number.isInteger(floorsUserInput) && Number(floorsUserInput) > 0 && Number(floorsUserInput) <=50) {
+					floorNo = Number(floorsUserInput);
+				} else {
+					new Notice("Number of floors is invalid! (0-50)");
+					return;
+				}
+			}
+			let bossUserInput = bossComponent.getValue();
+			// Check boss floors is a number over 0.
+			if(Number.isInteger(bossUserInput) && Number(bossUserInput) > 0) {
+				// If user defined, make sure we aren't making more boss floors than floor total.
+				if(!floorComponent.disabled && Number(bossUserInput) <=floorNo) {
+					new Notice("Num of Boss floors > total floors!");
+					return;
+				}
+				bossFloors = Number(bossUserInput);
+			} else {
+				new Notice("Number of boss floors is invalid! (< NumFloors)");
+				return;
+			}
+			testFunc(floorNo, difficulty, bossFloors);
 		});
 
 		// Character Generator
