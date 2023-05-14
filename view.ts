@@ -28,11 +28,12 @@ export class CyberpunkView extends ItemView {
 		const networkHeaderEl = networkConfigEl.createDiv("cpunk-network-header");
 		networkHeaderEl.createEl("h5", {text: "Network Generator"});
 
-			// Floors
-		networkConfigEl.createDiv({cls:"cpunk-option-header", text:"Number of Floors"});
+			// Number of Floors
+		networkConfigEl.createDiv({cls:"cpunk-option-header", text:"Number of Floors", attr:{"id":"cpunk-top-header"}});
 		const floorSpan = networkConfigEl.createSpan();
 		const rngRadio = floorSpan.createEl("input", {type: "radio", attr: {"id":"cpunk-random", "name":"floor_num_rng", "checked":"true"}})
-		floorSpan.createEl("label", {text: "Random (3d6)\n", attr:{"for":"cpunk-random"}, })
+		floorSpan.createEl("label", {text: "Random (3d6)", attr:{"for":"cpunk-random"}, })
+		floorSpan.createEl("br");
 		const definedRadio = floorSpan.createEl("input", {type: "radio", attr: {"id":"cpunk-defined", "name":"floor_num_rng"}})
 
 		const floorText = floorSpan.createEl("label")
@@ -48,9 +49,27 @@ export class CyberpunkView extends ItemView {
 			floorComponent.setDisabled(false);
 		});
 
+			// Difficulty
+		networkConfigEl.createDiv({cls:"cpunk-option-header", text:"Difficulty"});
+		const difficultyDiv = networkConfigEl.createDiv("cpunk-network-difficulty");
+		const diffEasy = difficultyDiv.createEl("input", {type: "radio", attr: {"id":"cpunk-easy", "name":"floor_diff"}})
+		difficultyDiv.createEl("label", {text: "Easy", attr:{"for":"cpunk-easy"}, })
+		difficultyDiv.createEl("br");
+		const diffMedium = difficultyDiv.createEl("input", {type: "radio", attr: {"id":"cpunk-medium", "name":"floor_diff", "checked":"true"}})
+		difficultyDiv.createEl("label", {text: "Medium", attr:{"for":"cpunk-medium"}, })
+		difficultyDiv.createEl("br");
+		const diffHard = difficultyDiv.createEl("input", {type: "radio", attr: {"id":"cpunk-hard", "name":"floor_diff"}})
+		difficultyDiv.createEl("label", {text: "Hard", attr:{"for":"cpunk-hard"}, })
+
+			// Boss Floors
+		networkConfigEl.createDiv();
+		const bossDiv = networkConfigEl.createDiv({text:"Boss Floors: "});
+		const bossComponent = new TextComponent(bossDiv);
+		bossComponent.setValue("0");
+
 
 			// Generate button
-		const netGenEl = this.contentEl.createDiv("cpunk-network-button");
+		const netGenEl = networkConfigEl.createDiv("cpunk-network-button");
 		const networkButton = netGenEl.createEl("button", {text: "Generate Network"})
 		networkButton.onClickEvent(function() {
 			testFunc(floorComponent.getValue());
@@ -60,7 +79,7 @@ export class CyberpunkView extends ItemView {
 		const characterEl = this.contentEl.createDiv("character-creator");
 
 			// Header
-		const characterHeaderEl = networkConfigEl.createDiv("cpunk-character-header");
+		const characterHeaderEl = characterEl.createDiv("cpunk-character-header");
 		characterHeaderEl.createEl("h5", {text: "Character Creator"});
 	}
 

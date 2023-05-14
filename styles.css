@@ -8,18 +8,25 @@ If your plugin does not need CSS, delete this file.
 */
 .cpunk-network-header h5 {
 	margin-bottom: 5px;
+	font-weight: bold;
+}
+
+#cpunk-top-header {
+	padding-top: 0px;
 }
 
 .cpunk-option-header {
 	font-weight: bold;
-}
-
-.cpunk-network-button {
-	padding-top: 10px;
+	padding-top: 15px;
+	padding-bottom: 6px;
 }
 
 .cpunk-network-config input {
 	width: 35px;
 	margin: 0 0 0 0;
+	margin-top: 5px;
 }
 
+.cpunk-network-button {
+	padding-top: 25px;
+}
