@@ -1,4 +1,4 @@
-import { App, Editor, MarkdownView, Modal, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import {App, Editor, MarkdownView, Modal, Plugin, PluginSettingTab, Setting} from 'obsidian';
 import {CyberpunkView, VIEW_TYPE_CYBERPUNK} from "./view";
 
 // Remember to rename these classes and interfaces!

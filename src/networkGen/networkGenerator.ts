@@ -1,4 +1,3 @@
-import {writeToFile} from "../util";
 import {archOptions, Floor, Node, Branch} from "./floortypes";
 
 function numberOfFloors(): number {
@@ -110,7 +109,7 @@ function createTree(branches:Branch[]):Node {
 	return branches[0].branch;
 }
 
-function generateNetwork(numFloors:number, difficulty:number, bossFloors:number): void {
+function generateNetwork(numFloors:number, difficulty:number, bossFloors:number): string {
 	// Create Lobby
 	let lobbyFloors = generateBranches(0, [2], "lobby")[0]; // generate lobby
 
@@ -131,8 +130,8 @@ function generateNetwork(numFloors:number, difficulty:number, bossFloors:number)
 
 	let tree = lobbyFloors.branch;
 	printTree(lobbyFloors.branch);
-	toMermaid(tree);
-	writeToFile("test123");
+
+	return(toMermaid(tree));
 }
 
 function printTree(tree: Node, prepend = ""): void {
@@ -170,11 +169,12 @@ function linkMermaidNodes(tree: Node){
 function toMermaid(tree: Node, id=0) {
 	let mermaidNodes = genMermaidNodes(tree);
 	let mermaidLinks = linkMermaidNodes(tree);
-	console.log("```mermaid  \ngraph TD;")
-	console.log(mermaidNodes);
-	console.log(mermaidLinks);
-	console.log("````")
-
+	let result = "```mermaid\ngraph TD;\n"
+	result += mermaidNodes;
+	result += mermaidLinks;
+	result += ("```");
+	console.log(result);
+	return result;
 }
 
 

@@ -1,4 +1,4 @@
-import {ItemView, Notice, TextComponent, WorkspaceLeaf} from "obsidian";
+import {ItemView, Editor, MarkdownView, Notice, TextComponent, WorkspaceLeaf} from "obsidian";
 import {generateNetwork} from "./src/networkGen/networkGenerator";
 
 export const VIEW_TYPE_CYBERPUNK = "cyberpunk-assistant-view";
@@ -16,7 +16,10 @@ export class CyberpunkView extends ItemView {
 		return "Cyberpunk Assistant";
 	}
 
+
+
 	async onOpen() {
+
 		const container = this.containerEl.children[1];
 		container.empty();
 		container.createEl("h4", {text: "Cyberpunk Assistant"});
@@ -71,6 +74,8 @@ export class CyberpunkView extends ItemView {
 			// Generate button
 		const netGenEl = networkConfigEl.createDiv("cpunk-network-button");
 		const networkButton = netGenEl.createEl("button", {text: "Generate Network"})
+		let markdownView = this.app.workspace.getActiveViewOfType(MarkdownView);
+
 		networkButton.onClickEvent(function() {
 			let floorNo;
 			let difficulty = Number(diffEasy.checked ? diffEasy.value : diffMedium.checked ? diffMedium.value : diffHard.value);
@@ -102,7 +107,11 @@ export class CyberpunkView extends ItemView {
 				return;
 			}
 
-			generateNetwork(floorNo, difficulty, bossFloors);
+			// Output generated network to file.
+			if (markdownView) {
+				let cursor = markdownView.editor.getCursor();
+				markdownView.editor.replaceRange(generateNetwork(floorNo, difficulty, bossFloors), cursor);
+			}
 		});
 
 		// Character Generator
