@@ -1,5 +1,5 @@
 import {ItemView, Notice, TextComponent, WorkspaceLeaf} from "obsidian";
-import {testFunc} from "./networkGenerator";
+import {generateNetwork} from "./src/networkGen/networkGenerator";
 
 export const VIEW_TYPE_CYBERPUNK = "cyberpunk-assistant-view";
 
@@ -73,7 +73,7 @@ export class CyberpunkView extends ItemView {
 		const networkButton = netGenEl.createEl("button", {text: "Generate Network"})
 		networkButton.onClickEvent(function() {
 			let floorNo;
-			let difficulty = diffEasy.checked ? diffEasy.value : diffMedium.checked ? diffMedium.value : diffHard.value;
+			let difficulty = Number(diffEasy.checked ? diffEasy.value : diffMedium.checked ? diffMedium.value : diffHard.value);
 			let bossFloors;
 
 			if(floorComponent.disabled) {
@@ -88,9 +88,9 @@ export class CyberpunkView extends ItemView {
 					return;
 				}
 			}
-			let bossUserInput = bossComponent.getValue();
-			// Check boss floors is a number over 0.
-			if(Number.isInteger(bossUserInput) && Number(bossUserInput) > 0) {
+			let bossUserInput = Number(bossComponent.getValue());
+			// Check boss floors is a number over -1.
+			if(Number.isInteger(bossUserInput) && Number(bossUserInput) > -1) {
 				// If user defined, make sure we aren't making more boss floors than floor total.
 				if(!floorComponent.disabled && Number(bossUserInput) <=floorNo) {
 					new Notice("Num of Boss floors > total floors!");
@@ -98,10 +98,11 @@ export class CyberpunkView extends ItemView {
 				}
 				bossFloors = Number(bossUserInput);
 			} else {
-				new Notice("Number of boss floors is invalid! (< NumFloors)");
+				new Notice("Number of boss floors is invalid! (Not a number or < 0)");
 				return;
 			}
-			testFunc(floorNo, difficulty, bossFloors);
+
+			generateNetwork(floorNo, difficulty, bossFloors);
 		});
 
 		// Character Generator

@@ -1,4 +1,4 @@
-import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import { App, Editor, MarkdownView, Modal, Plugin, PluginSettingTab, Setting } from 'obsidian';
 import {CyberpunkView, VIEW_TYPE_CYBERPUNK} from "./view";
 
 // Remember to rename these classes and interfaces!
@@ -64,9 +64,10 @@ export default class cyberpunkAssistant extends Plugin {
 			}
 		});
 
+
+
 		// This adds a settings tab so the user can configure various aspects of the plugin
 		this.addSettingTab(new SampleSettingTab(this.app, this));
-
 	}
 
 	onunload() {
